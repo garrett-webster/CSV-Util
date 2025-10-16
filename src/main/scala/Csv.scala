@@ -7,4 +7,5 @@ case class Csv(lines: List[String]) {
     row <- rows
     if row.status != Okay && row.status != Header
   } yield row
+  val rowsWithErrorStatus: List[Row] = rows.filter(row => row.status != Okay && row.status != Header)
 }
