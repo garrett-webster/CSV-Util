@@ -1,5 +1,4 @@
 object OutputUtils {
-  import os._
   
   def printHeaders(csv: Csv): Unit = {
     for (header <- csv.headers)
@@ -29,5 +28,9 @@ object OutputUtils {
   def writeCsv(csv:Csv, path: os.Path): Unit = {
     os.write.over(path, "")
 
+    for(row <- csv.rows) {
+      os.write.append(path, s"${row.text} \n")
+      println(row)
+    }
   }
 }
