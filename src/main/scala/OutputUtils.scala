@@ -1,5 +1,8 @@
 object OutputUtils {
-  
+  def printUsage(): Unit = {
+    println("You should probably actually use this as intented. I'll update this later with a usage guide.")
+  }
+
   def printHeaders(csv: Csv): Unit = {
     for (header <- csv.headers)
       print(header)
