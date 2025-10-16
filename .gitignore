@@ -48,4 +48,4 @@ build/
 .bsp/
 
 ### Test files ###
-.src/test/
+src/main/testFiles
