@@ -12,19 +12,14 @@ object OutputUtils {
     println(s"Number of headers: ${csv.numHeaders}")
     println(s"Number of rows:    ${csv.numRows}")
 
-    val badRows: List[Row] = for {
-      row <- csv.rows
-      if row.status != Okay
-    } yield row
-
-    if (badRows.nonEmpty) {
-      println(s"\nNumber of bad lines:  ${badRows.length}")
-      println(s"Number of good lines: ${csv.numRows - badRows.length} \n")
+    if (csv.rowsWithErrorStatus.nonEmpty) {
+      println(s"\nNumber of bad lines:  ${csv.rowsWithErrorStatus.length}")
+      println(s"Number of good lines: ${csv.numRows - csv.rowsWithErrorStatus.length} \n")
       println("Bad rows")
 
       val errorCodeLabel = "Error Code"
       println(s"$errorCodeLabel${" " * (CHARACTERSBEFOREPIPE - errorCodeLabel.length)}| Row Text")
-      for (row <- badRows) {
+      for (row <- csv.rowsWithErrorStatus) {
         val spaces = " " * (CHARACTERSBEFOREPIPE - row.status.text.length)
         println(s"${row.status}$spaces| ${row.text}")
       }
