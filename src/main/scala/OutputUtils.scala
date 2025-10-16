@@ -28,9 +28,8 @@ object OutputUtils {
   def writeCsv(csv:Csv, path: os.Path): Unit = {
     os.write.over(path, "")
 
-    for(row <- csv.rows) {
+    for(row <- Row(csv.headers.mkString(",")) :: csv.rows) {
       os.write.append(path, s"${row.text} \n")
-      println(row)
     }
   }
 }

@@ -7,8 +7,6 @@ object CSVReader {
   def main(args: Array[String]): Unit = {
     val option: String = args(0).toLowerCase()
     val inputPath: String = args(1)
-
-    // I want to make a "copy good rows" command that will output a new csv to the given path. That will take some work because Source does not support writing files.
     val outputPath: Option[String] = args.lift(2)
 
     Using(Source.fromFile(inputPath)) { source =>
@@ -16,6 +14,13 @@ object CSVReader {
       option match {
         case "-d" | "-describe" => printDescribeOutput(csv)
         case "-c" | "-copy" => copyCsv(csv, outputPath)
+        case "-t" | "-trim" => {
+          val outPath = outputPath match {
+            case Some(pathStr) => os.Path(pathStr, os.pwd)
+            case None => os.Path(inputPath, os.pwd)
+          }
+          writeCsv(csv.withoutErrorRows, outPath)
+        }
       }
     }
   }
