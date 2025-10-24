@@ -1,4 +1,6 @@
-import OutputUtils.{printDescribeOutput, printUsage, writeCsv}
+import CSV.Csv
+import CSV.OutputUtils.{printDescribeOutput, printUsage, writeCsv}
+import commands.CommandFactory
 
 import scala.annotation.tailrec
 import scala.io.Source
@@ -15,14 +17,10 @@ object CSVReader {
   )
 
   def main(args: Array[String]): Unit = {
-    if (args.length == 0) printUsage()
-    else {
-      val option = args(0).toLowerCase()
-      option match {
-        case "-d" | "-describe" | "-c" | "-copy" | "-t" | "-trim" =>
-          optionToFunction(option)(args.tail)
-        case _ => printUsage()
-      }
+    CommandFactory(args) match {
+      case Success(command) =>
+        command.run()
+      case Failure(e) => println(e)
     }
   }
 

@@ -1,3 +1,5 @@
+package CSV
+
 sealed trait RowStatus {val text: String}
 case object Header extends RowStatus {val text = "Header"}
 case object Okay extends RowStatus {val text = "Okay"}
