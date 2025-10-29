@@ -1,4 +1,8 @@
 package commands
 
-case class Parameters(flags: Map[String, Option[String]], params: Array[String])
-
+case class Parameters(
+                               args: Seq[String],
+                               options: Map[String, Option[String]],
+                               flags: Seq[String],
+                               values: Array[String]
+                     )

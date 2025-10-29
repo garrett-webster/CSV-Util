@@ -1,8 +1,8 @@
 package CSV
 
-case class Csv(lines: List[String]) {
+case class Csv(lines: List[String], delimeter: String = ",") {
 //  Question: Should case classes be primarily vals? Is it like a java record, or should there be lots of methods? How do you think about case classes?
-  val headers: List[String] = lines.head.split(",").toList
+  val headers: List[String] = lines.head.split(delimeter).toList
   val numHeaders: Int = headers.length
   val rows: List[Row] = for (row <- lines.tail) yield Row(row, Some(numHeaders))
   val numRows: Int = rows.length

@@ -16,10 +16,11 @@ abstract class Command {
 
 object CommandFactory {
   private val flagToCommand: Map[String, Array[String] => Try[Command]] = Map(
-    "-d" -> DescribeCommand.apply,
-    "-c" -> CopyCommand.apply,
-    "-t" -> TrimCommand.apply
+    "describe" -> DescribeCommand.apply,
+    "copy" -> CopyCommand.apply,
+    "trim" -> TrimCommand.apply
   )
+
   def apply(args: Array[String]): Try[Command] = {
     flagToCommand.get(args(0).toLowerCase()) match {
       case Some(factory) => factory(args.tail)
