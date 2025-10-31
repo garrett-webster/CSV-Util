@@ -4,7 +4,7 @@ import CSV.OutputUtils.printDescribeOutput
 import CSV.Csv
 
 class DescribeCommand(csv: Csv, parameters: Parameters) extends Command(csv, parameters) {
-  override def run(): Unit = {
+  override def apply(): Unit = {
     printDescribeOutput(csv)
   }
 }

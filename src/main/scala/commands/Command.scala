@@ -5,7 +5,7 @@ import CSV.Csv
 import scala.util.{Failure, Success, Try, Using}
 
 abstract class Command(csv: Csv, parameters: Parameters) {
-  def run(): Unit
+  def apply(): Unit
 }
 
 trait CommandObject {
