@@ -1,28 +1,19 @@
 package commands
 
 import CSV.OutputUtils.printDescribeOutput
+import CSV.Csv
 
-import scala.util.{Failure, Success, Try}
-
-class DescribeCommand(parameters: Parameters) extends Command {
-  val path: String = parameters.params(0)
+class DescribeCommand(csv: Csv, parameters: Parameters) extends Command(csv, parameters) {
   override def run(): Unit = {
-      parseCsv(path) match {
-        case Success(csv) => printDescribeOutput(csv)
-        case _ => println(s"Unspecified error describing $path")
-      }
+    printDescribeOutput(csv)
   }
 }
 
 object DescribeCommand extends CommandObject {
-  override val flagMap: Map[String, Boolean] = Map.empty
-  override val nonFlagParamCount: Int = 1
+  override val flags: Array[String] = Array.empty
+  override val optionMap: Map[String, Boolean] = Map.empty
+  override val nonFlagParamCount: Int = 0
   override val usage = "-d <path to CSV>"
-
-  def apply(args: Array[String]): Try[DescribeCommand] = {
-    convertArgsToParameters(args) match {
-      case Failure(exception) => Failure(exception)
-      case Success(parameters) => Success(new DescribeCommand(parameters))
-    }
-  }
+  override val commandConstructor: (Csv, Parameters) => DescribeCommand =
+    (csv: Csv, parameters: Parameters) => new DescribeCommand(csv, parameters)
 }
