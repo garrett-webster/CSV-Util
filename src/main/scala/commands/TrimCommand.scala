@@ -1,36 +1,28 @@
-//package commands
-//
-//import CSV.OutputUtils.writeCsv
-//import os.Path
-//
-//import scala.util.{Failure, Success, Try}
-//
-//class TrimCommand(parameters: Parameters) extends Command {
-//  val srcPath: String = parameters.params(0)
-//
-//  val outPath: Path = parameters.flags.get("-o")
-//      .flatten.map(pathStr => os
-//      .Path(pathStr, os.pwd))
-//      .getOrElse(os.Path(srcPath, os.pwd))
-//
-//  override def run(): Unit = {
-//    parseCsv(srcPath) match {
-//      case Success(csv) => writeCsv(csv.withoutErrorRows, outPath)
-//      case _ => println(s"Unspecified error trimming $srcPath")
-//    }
-//  }
-//}
-//
-//object TrimCommand extends CommandObject {
-//  override val flagMap: Map[String, Boolean] = Map(("-o", true))
-//  override val nonFlagParamCount: Int = 1
-//  override val usage: String = "-t <path to CSV to trim> \noptional flags:\n " +
-//    "-o <path to copy to>: If left unspecified, the trimmed csv will overwrite the original csv"
-//
-//  override def apply(args: Array[String]): Try[Command] = {
-//    convertArgsToParameters(args) match {
-//      case Failure(exception) => Failure(exception)
-//      case Success(parameters) => Success(new TrimCommand(parameters))
-//    }
-//  }
-//}
+package commands
+
+import CSV.Csv
+import CSV.OutputUtils.writeCsv
+import os.Path
+
+class TrimCommand(csv: Csv, parameters: Parameters) extends Command(csv, parameters) {
+  private val destinationPath: Option[String] = parameters.options.getOrElse("-o", None)
+
+    val outPath: Path = parameters.options.get("+o")
+        .flatten.map(pathStr => os
+        .Path(pathStr, os.pwd))
+        .getOrElse(os.Path(csv.path, os.pwd))
+
+  override def apply(): Unit = {
+    writeCsv(csv.withoutErrorRows, outPath)
+  }
+}
+
+object TrimCommand extends CommandObject {
+  override val flags: Array[String] = Array.empty
+  override val optionMap: Map[String, Boolean] = Map("+o" -> false)
+  override val nonFlagParamCount: Int = 0
+  override val usage: String = "-t <path to CSV to trim> \noptional flags:\n " +
+      "-o <path to copy to>: If left unspecified, the trimmed csv will overwrite the original csv"
+  override val commandConstructor: (Csv, Parameters) => TrimCommand =
+    (csv: Csv, parameters: Parameters) => new TrimCommand(csv, parameters)
+}

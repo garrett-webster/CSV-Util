@@ -1,5 +1,5 @@
 import CSV.Csv
-import commands.{Command, CopyCommand, DescribeCommand, Parameters}
+import commands.{Command, CopyCommand, DescribeCommand, Parameters, TrimCommand}
 
 import scala.io.Source
 import scala.util.{Failure, Success, Try, Using}
@@ -15,6 +15,7 @@ object Arguments {
     val commandResult: Try[(Csv, Parameters) => Try[Command]] = cmdLineArgs.headOption match {
       case Some("describe") => Success(DescribeCommand.apply)
       case Some("copy") => Success(CopyCommand.apply)
+      case Some("trim") => Success(TrimCommand.apply)
       case Some(other)      => Failure(new IllegalArgumentException(s"Unknown command: $other"))
       case None             => Failure(new IllegalArgumentException("No command specified"))
     }
