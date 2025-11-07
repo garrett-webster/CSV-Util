@@ -52,7 +52,7 @@ object Arguments {
 
   def parseCsv(path: String): Try[Csv] = {
     Using(Source.fromFile(path)) {
-      source => Csv(source.getLines().toList)
+      source => Csv(path, source.getLines().toList)
     }
   }
 }

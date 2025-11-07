@@ -1,6 +1,6 @@
 package CSV
 
-case class Csv(lines: List[String], delimiter: String = ",") {
+case class Csv(path: String, lines: List[String], delimiter: String = ",") {
 //  Question: Should case classes be primarily vals? Is it like a java record, or should there be lots of methods? How do you think about case classes?
   val headers: List[String] = lines.head.split(delimiter).toList
   val numHeaders: Int = headers.length
@@ -10,5 +10,5 @@ case class Csv(lines: List[String], delimiter: String = ",") {
   private val rowsWithoutErrorStatus: List[Row] = rows.filter(row => row.status == Okay || row.status == Header)
 
 //  Question: Should this be a lazy val or a method?
-  lazy val withoutErrorRows: Csv = Csv(headers.mkString(",") :: rowsWithoutErrorStatus.map(_.text))
+  lazy val withoutErrorRows: Csv = Csv(path, headers.mkString(",") :: rowsWithoutErrorStatus.map(_.text))
 }
