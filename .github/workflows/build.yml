@@ -29,7 +29,12 @@ jobs:
       - name: Package JAR
         run: |
           mkdir -p dist
-          cp target/scala-*/myproject-assembly-*.jar dist/myproject.jar  # adjust as needed
+          JAR=$(find target -name "*-assembly-*.jar" | head -n 1)
+          if [ -z "$JAR" ]; then
+            echo "Error: assembly JAR not found!"
+            exit 1
+          fi
+          cp "$JAR" dist/myproject.jar
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
