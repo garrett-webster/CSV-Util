@@ -1,0 +1,41 @@
+name: Build Scala Executable
+
+on:
+  push:
+    branches:
+      - main   # or any branch you want
+  workflow_dispatch:  # allows manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up sbt
+        uses: olafurpg/setup-scala@v17
+        with:
+          java-version: 17
+          sbt-version: 1.9.0
+
+      - name: Build fat JAR
+        run: sbt assembly  # Requires sbt-assembly plugin
+
+      - name: Package JAR
+        run: |
+          mkdir dist
+          cp target/scala-3.3.1/myproject-assembly-*.jar dist/myproject.jar  # adjust path
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: myproject
+          path: dist/myproject.jar
