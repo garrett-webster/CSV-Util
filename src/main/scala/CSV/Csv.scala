@@ -11,4 +11,8 @@ case class Csv(path: String, lines: List[String], delimiter: String = ",") {
 
 //  Question: Should this be a lazy val or a method?
   lazy val withoutErrorRows: Csv = Csv(path, headers.mkString(",") :: rowsWithoutErrorStatus.map(_.text))
+
+  def mapRows(func: List[Row] => List[Row]): Csv = {
+   Csv(path, headers.mkString(",") :: func(rowsWithoutErrorStatus).map(_.text))
+  }
 }
