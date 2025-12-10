@@ -4,8 +4,8 @@ sealed trait RowStatus {val text: String}
 case object Header extends RowStatus {val text = "Header"}
 case object Okay extends RowStatus {val text = "Okay"}
 case object Empty extends RowStatus {val text = "Empty"}
-case object TooManyRows extends RowStatus {val text = "TooManyRows"}
-case object TooFewRows extends RowStatus {val text = "TooFewRows"}
+case object TooManyColumns extends RowStatus {val text = "TooManyColumns"}
+case object TooFewColumns extends RowStatus {val text = "TooFewColumns"}
 
 case class Row(text: String, numColumns: Option[Int] = None){
   def entries: List[String] = text.split(",").toList
@@ -17,10 +17,10 @@ case class Row(text: String, numColumns: Option[Int] = None){
   }
 
   private def hasTooManyEntries: Option[RowStatus] =
-    if (entries.length > numColumns.getOrElse(0)) Some(TooManyRows) else None
+    if (text.count(_ == ',') + 1 > numColumns.getOrElse(0)) Some(TooManyColumns) else None
 
   private def hasTooFewEntries: Option[RowStatus] =
-    if (entries.length < numColumns.getOrElse(0)) Some(TooFewRows) else None
+    if (text.count(_ == ',') + 1 < numColumns.getOrElse(0)) Some(TooFewColumns) else None
 
   private def calculateStatus(): RowStatus = {
     hasTooManyEntries
