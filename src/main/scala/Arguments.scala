@@ -44,16 +44,16 @@ object Arguments {
     } yield Arguments(cmd, path, params)
 
     val csv: Try[Csv] = arguments match{
-      case Success(args) => parseCsv(args.csvPath)
+      case Success(args) => parseCsv(args.csvPath, args.parameters.delimiter)
       case Failure(error) => Failure(error)
     }
 
     buildCommand(csv, arguments)
   }
 
-  def parseCsv(path: String): Try[Csv] = {
+  def parseCsv(path: String, delimiter: Char): Try[Csv] = {
     Using(Source.fromFile(path)) {
-      source => Csv(path, source.getLines().toList)
+      source => Csv(path, source.getLines().toList, delimiter)
     }
   }
 }

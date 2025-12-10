@@ -10,7 +10,8 @@ case class Parameters(
                                flags: Seq[String],
                                globalFlags: Seq[String],
                                values: Array[String],
-                               warnings: Seq[String]
+                               warnings: Seq[String],
+                               delimiter: Char
                      )
 
 object Parameters {
@@ -26,7 +27,7 @@ object Parameters {
 
   private def extractParameters(args: Array[String]): Try[Parameters] = {
     argsToParameters(Success(
-      Parameters(args, Map.empty, Map.empty, Seq.empty, Seq.empty, Array.empty, Seq.empty)
+      Parameters(args, Map.empty, Map.empty, Seq.empty, Seq.empty, Array.empty, Seq.empty, ',')
     ))
   }
 
@@ -66,11 +67,15 @@ object Parameters {
           if ((value.startsWith("-") || value.startsWith("+")) && nextArg != "+d")
             input.warnings :+ s"option $nextArg was passed a value that could be an option or flag"
           else input.warnings
+
+        val updatedDelimiter = if (nextArg == "+d") value.charAt(0) else input.delimiter
+
         Success(
           input.copy(
             globalOptions = input.globalOptions.updated(nextArg, Some(value)),
             args = input.args.drop(2),
-            warnings = updatedWarnings
+            warnings = updatedWarnings,
+            delimiter = updatedDelimiter
           )
         )
       case _ =>
